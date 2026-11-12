@@ -39,13 +39,13 @@ export default function CosmicCanvas({
     const height = container.clientHeight || window.innerHeight;
     const dpr = isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2);
 
-    const preExpBgColor = new THREE.Color(0x000000);
-    const postExpBgColor = new THREE.Color(0x010206);
-    const activeBgColor = new THREE.Color(0x000000);
+    const preExpBgColor = new THREE.Color(0x020204);
+    const postExpBgColor = new THREE.Color(0x020204);
+    const activeBgColor = new THREE.Color(0x020204);
 
     const scene = new THREE.Scene();
     scene.background = activeBgColor;
-    const sceneFog = new THREE.FogExp2(0x000000, 0.0055);
+    const sceneFog = new THREE.FogExp2(0x020204, 0.0055);
     scene.fog = sceneFog;
 
     const camera = new THREE.PerspectiveCamera(52, width / height, 0.1, 350);
@@ -372,8 +372,8 @@ export default function CosmicCanvas({
           float twinkle = (1.0 - twinkleAmp) + twinkleAmp * sin(uTime * twinkleFreq + phase);
           vHover = hoverMask;
 
-          // Zero stars in Section 1 deep black void; each star ignites progressively as it expands outward from the explosion
-          float postExpReveal = smoothstep(0.01, 0.18 + 0.32 * randSpeedA, rawExp);
+          // Sharp, pinpoint stars twinkle behind the orb and headline
+          float starReveal = mix(0.92 + 0.08 * twinkle, smoothstep(0.01, 0.18 + 0.32 * randSpeedA, rawExp), isBackPostExp);
           float dustDim = 1.0;
           if (isBackPostExp < 0.5 && pos.y > -12.0 && pos.y < 12.0 && pos.x < 10.0) {
             dustDim = mix(1.0, 0.55, postExpBlend);
@@ -384,11 +384,11 @@ export default function CosmicCanvas({
             clamp(1.28 - (-mvPosition.z / 180.0), 0.28, 0.98),
             vPostExpBlend
           );
-          vAlpha = min(1.0, (twinkle * depthBrightness * dustDim + hoverMask * 0.35) * postExpReveal);
+          vAlpha = min(1.0, (twinkle * depthBrightness * dustDim + hoverMask * 0.35) * starReveal);
 
           float postExpHoverScale = 1.0 + hoverMask * 0.65;
           float maxPostSize = (vSpikedGiant > 0.5 || vBlueBeacon > 0.5) ? 34.0 : 7.2;
-          float postExpSize = clamp((aSize * mix(0.52, 1.0, isBackPostExp)) * postExpHoverScale * postExpReveal * uPixelRatio * (21.0 / max(1.0, -mvPosition.z)), 0.0, maxPostSize);
+          float postExpSize = clamp((aSize * mix(0.72, 1.0, isBackPostExp)) * postExpHoverScale * starReveal * uPixelRatio * (21.0 / max(1.0, -mvPosition.z)), 0.0, maxPostSize);
 
           gl_PointSize = postExpSize;
         }
@@ -677,10 +677,10 @@ export default function CosmicCanvas({
           float ringMask = smoothstep(0.44, 0.76, warpedLimb);
           float hotRimPeak = smoothstep(0.64, 0.90, warpedLimb);
           vec3 ringCol = mix(royalSapphire, electricCyan, smoothstep(0.45, 0.78, warpedLimb + plasmaVeins * 0.25));
-          ringCol = mix(ringCol, whiteHotCore, clamp(hotRimPeak * 0.92 + pow(filamentIntensity, 2.0) * 0.55, 0.0, 1.0));
+          ringCol = mix(ringCol, whiteHotCore, clamp(hotRimPeak * 0.95 + pow(filamentIntensity, 2.0) * 0.55, 0.0, 1.0));
 
-          // HDR luminance boost on the limb ring while preserving deep dark contrast in the center
-          vec3 col = mix(darkCoreCol, ringCol * 1.65, ringMask);
+          // Full luminous cyan-blue rim brightness against deep obsidian black
+          vec3 col = mix(darkCoreCol, ringCol * 1.60, ringMask);
 
           // Pre-detonation runaway supercritical flash
           col = mix(col, whiteHotCore * 1.8, pow(uStress, 2.2) * 0.94);
@@ -775,7 +775,7 @@ export default function CosmicCanvas({
           vec3 col = mix(deepSapphire, cherenkovCyan, 0.45 + 0.35 * sin(uTime * 1.8 + vObjPos.x * 6.0));
           col = mix(col, hotIceWhite, smoothstep(0.25, 0.75, filament));
 
-          float alpha = ringZone * filament * (0.85 + uStress * 0.45) * uExplodeFade;
+          float alpha = ringZone * filament * (0.85 + uStress * 0.45) * uExplodeFade * 0.95;
           gl_FragColor = vec4(col * 1.45, clamp(alpha, 0.0, 0.85));
         }
       `,
@@ -1019,16 +1019,16 @@ export default function CosmicCanvas({
           // Temperature-driven spectral color synthesis
           vec3 rawCol = deepCobalt * (ringOuterAtmosphere + coronalRays * 0.65)
                       + magneticSapphire * (ringTurbulence * 1.15 + coronalRays * 0.95 + innerTongues * 0.75)
-                      + cherenkovAzure * (ringSpine * 1.20 + ringTurbulence * 0.65 + innerTongues * 0.95 + hotspots * 0.65)
-                      + relativisticWhite * (pow(ringSpine, 1.65) * 1.35 + hotspots * 1.45 + microSparks * 1.25 + pow(innerTongues, 2.0) * 0.65);
+                      + cherenkovAzure * (ringSpine * 1.25 + ringTurbulence * 0.75 + innerTongues * 0.95 + hotspots * 0.75)
+                      + relativisticWhite * (pow(ringSpine, 1.65) * 1.25 + hotspots * 1.35 + microSparks * 1.15 + pow(innerTongues, 2.0) * 0.55);
 
           // Filmic HDR curve so intense regions glow with realistic white-blue brilliance without flat clipping
           vec3 hdrCol = (rawCol * (2.51 * rawCol + 0.03)) / (rawCol * (2.43 * rawCol + 0.59) + 0.14);
 
           float outerVignette = smoothstep(0.74, 0.46, r);
-          float alpha = clamp(energy * outerVignette, 0.0, 0.98) * uExplodeFade;
+          float alpha = clamp(energy * outerVignette * 0.95, 0.0, 0.95) * uExplodeFade;
 
-          gl_FragColor = vec4(hdrCol * 1.32, alpha);
+          gl_FragColor = vec4(hdrCol * 1.28, alpha);
         }
       `,
       transparent: true,
@@ -3221,13 +3221,21 @@ export default function CosmicCanvas({
       const implosionSqueeze = THREE.MathUtils.smoothstep(smoothScroll, 0.025, 0.102);
       const moonScale =
         (1.0 + Math.sin(elapsed * 2.2) * 0.02) * (1.0 - implosionSqueeze * 0.975);
-      moonGroup.scale.setScalar(Math.max(0.018, moonScale));
+      const isDesktop = window.innerWidth >= 1024;
+      const baseOffsetX = 0;
+      // Shifted higher to perfectly align the ring behind the headline
+      const baseOffsetY = isDesktop ? 0.95 : 0.75;
+      // Massively increased scale to match the target mockup
+      const targetScale = (isDesktop ? 3.5 : 2.2) * Math.max(0.018, moonScale);
+
+      moonGroup.scale.setScalar(targetScale);
       moonGroup.rotation.y =
         elapsed * 0.14 + smoothScroll * 3.2 + currentPointer.x * 0.45 + dragOffset.x * 0.6;
       moonGroup.rotation.x =
         Math.sin(elapsed * 0.35) * 0.08 - currentPointer.y * 0.35 + dragOffset.y * 0.5;
-      moonGroup.position.x = currentPointer.x * 0.42 * moonFade;
-      moonGroup.position.y = currentPointer.y * 0.32 * moonFade;
+
+      moonGroup.position.x = baseOffsetX + currentPointer.x * 0.42 * moonFade;
+      moonGroup.position.y = baseOffsetY + currentPointer.y * 0.32 * moonFade;
       moonGroup.visible = moonFade > 0.005;
       if (moonGroup.visible) {
         haloMesh.lookAt(camera.position);

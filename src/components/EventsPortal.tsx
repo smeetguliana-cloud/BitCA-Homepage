@@ -20,9 +20,10 @@ export const EventsPortal: React.FC<EventsPortalProps> = ({ soundEnabled }) => {
 
   return (
     <section
-      id="events-trigger"
+      id="portal"
       className="py-24 sm:py-36 px-4 sm:px-8 lg:px-16 relative overflow-hidden"
     >
+      <div id="events-trigger" className="absolute -top-24" />
       <div className="max-w-4xl mx-auto text-center space-y-6">
         
         {/* HUD Telemetry Kicker */}

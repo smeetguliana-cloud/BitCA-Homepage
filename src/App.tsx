@@ -34,10 +34,10 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#07070d] text-[#f8fafc] font-sans relative selection:bg-[#ec4899]/30 selection:text-[#06b6d4]">
+    <div className="min-h-screen bg-[#020204] text-[#f8fafc] font-sans relative selection:bg-[#ec4899]/30 selection:text-[#06b6d4]">
       
       {/* Fixed 3D WebGL Background Scene */}
-      <div className="fixed inset-0 pointer-events-none z-0 bg-[#07070d]">
+      <div className="fixed inset-0 pointer-events-none z-0 bg-[#020204]">
         <CosmicCanvas 
           scrollRef={scrollRef} 
           activeFilter="all" 
@@ -47,7 +47,7 @@ export default function App() {
 
       {/* Primary UI layer sitting transparently over the WebGL background */}
       <div className="relative z-10 flex flex-col min-h-screen">
-        <Navbar soundEnabled={soundEnabled} onToggleSound={toggleSound} />
+        <Navbar />
         
         <main className="flex-1">
           <Hero soundEnabled={soundEnabled} />
