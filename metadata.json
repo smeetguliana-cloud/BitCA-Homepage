@@ -1,0 +1,6 @@
+{
+  "name": "Multiverse 404 - Tech Fest",
+  "description": "Multiverse 404: The cinematic tech fest presented by BitCA, Department of Computer Applications at K.C. College, HSNC University.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
