@@ -547,8 +547,8 @@ export default function CosmicCanvas({
           float convection = fbm(nPos * 4.6 + warp * 2.1);
           float microBoil = fbm(nPos * 10.5 - flow * 1.8) * 0.35;
 
-          float pulseWave = sin(nPos.x * 7.0 + uTime * 4.8) * cos(nPos.y * 7.0 - uTime * 4.2) * 0.016;
-          float disp = (convection - 0.46) * (0.075 + uStress * 0.15) + microBoil * 0.028 + pulseWave;
+          float pulseWave = sin(nPos.x * 7.0 + uTime * 4.8) * cos(nPos.y * 7.0 - uTime * 4.2) * 0.004;
+          float disp = (convection - 0.46) * (0.012 + uStress * 0.14) + microBoil * 0.006 + pulseWave;
           vDisplacement = disp;
 
           vec3 tremor = vec3(
@@ -653,40 +653,39 @@ export default function CosmicCanvas({
 
           // Radial distance from center of sphere projection (0 = dead center, 1 = outer limb)
           float radialLimb = sqrt(max(0.0, 1.0 - geoNdotV * geoNdotV));
-          // Highly organic, fibrous FBM-warped boundary between the dark boiling cavity and the blazing ring
-          float boundaryWarp = (fluidTurbulence - 0.5) * 0.30 + (plasmaVeins - 0.5) * 0.18 + (fineGranulation - 0.5) * 0.10;
+          float boundaryWarp = (fluidTurbulence - 0.5) * 0.18 + (plasmaVeins - 0.5) * 0.11 + (fineGranulation - 0.5) * 0.06;
           float warpedLimb = clamp(radialLimb + boundaryWarp, 0.0, 1.0);
 
-          // 1. REALISTIC HIGH-CONTRAST SINGULARITY CAVITY (Boiling abyss with incandescent magnetic fissures)
-          vec3 voidAbyss       = vec3(0.001, 0.004, 0.016);
-          vec3 deepMagneticBlue= vec3(0.012, 0.048, 0.210);
-          vec3 cobaltMagma     = vec3(0.065, 0.290, 0.880);
-          vec3 cherenkovArc    = vec3(0.280, 0.740, 1.000);
-          vec3 whiteHotCore    = vec3(0.950, 0.990, 1.000);
+          // 1. LUMINOUS SWIRLING ELECTRIC-BLUE / CYAN PLASMA CORE (Matching reference orb interior)
+          vec3 deepSapphire    = vec3(0.024, 0.240, 0.560);
+          vec3 royalCobalt     = vec3(0.045, 0.460, 0.860);
+          vec3 electricBlue    = vec3(0.140, 0.720, 0.990);
+          vec3 brightCyan      = vec3(0.520, 0.920, 1.000);
+          vec3 plasmaIceWhite  = vec3(0.960, 0.995, 1.000);
 
-          vec3 darkCoreCol = mix(voidAbyss, deepMagneticBlue, smoothstep(0.25, 0.70, fluidTurbulence));
-          darkCoreCol = mix(darkCoreCol, cobaltMagma, emberCells * 0.65);
-          // Intense glowing plasma veins slicing through the dark cavity
-          darkCoreCol += cherenkovArc * filamentIntensity * 0.95;
-          darkCoreCol += whiteHotCore * pow(filamentIntensity, 3.2) * 0.75;
+          float swirlBand = smoothstep(0.14, 0.82, fluidTurbulence * 0.68 + fineGranulation * 0.32);
+          float brightCloud = smoothstep(0.36, 0.78, fluidTurbulence + (plasmaVeins - 0.25) * 0.40);
 
-          // 2. INTENSE BLACKBODY BLUE-WHITE LIMB ERUPTION (Transitioning into the blazing corona ring)
-          vec3 royalSapphire   = vec3(0.09, 0.42, 0.98);
-          vec3 electricCyan    = vec3(0.35, 0.82, 1.00);
+          vec3 coreCol = mix(deepSapphire, royalCobalt, smoothstep(0.08, 0.52, swirlBand));
+          coreCol = mix(coreCol, electricBlue, clamp(emberCells * 0.88 + swirlBand * 0.32, 0.0, 1.0));
+          coreCol = mix(coreCol, brightCyan, brightCloud * 0.72);
+          coreCol += brightCyan * filamentIntensity * 0.78;
+          coreCol += plasmaIceWhite * pow(filamentIntensity, 2.0) * 0.68;
 
-          float ringMask = smoothstep(0.44, 0.76, warpedLimb);
-          float hotRimPeak = smoothstep(0.64, 0.90, warpedLimb);
-          vec3 ringCol = mix(royalSapphire, electricCyan, smoothstep(0.45, 0.78, warpedLimb + plasmaVeins * 0.25));
-          ringCol = mix(ringCol, whiteHotCore, clamp(hotRimPeak * 0.95 + pow(filamentIntensity, 2.0) * 0.55, 0.0, 1.0));
+          // 2. SEAMLESS CYAN-WHITE LIMB MERGING DIRECTLY INTO THE HALO RING
+          float rimCurve = pow(warpedLimb, 4.2);
+          float ringMask = smoothstep(0.70, 0.95, warpedLimb);
+          float hotRimPeak = smoothstep(0.84, 0.98, warpedLimb);
+          vec3 ringCol = mix(electricBlue, brightCyan, smoothstep(0.66, 0.89, warpedLimb + plasmaVeins * 0.14));
+          ringCol = mix(ringCol, plasmaIceWhite, clamp(hotRimPeak * 0.96 + rimCurve * 0.48, 0.0, 1.0));
 
-          // Full luminous cyan-blue rim brightness against deep obsidian black
-          vec3 col = mix(darkCoreCol, ringCol * 1.60, ringMask);
+          vec3 col = mix(coreCol, ringCol * 1.30, ringMask);
 
           // Pre-detonation runaway supercritical flash
-          col = mix(col, whiteHotCore * 1.8, pow(uStress, 2.2) * 0.94);
+          col = mix(col, plasmaIceWhite * 1.8, pow(uStress, 2.2) * 0.94);
 
-          // Seamless volumetric feathering well before the geometric silhouette so no hard sphere edge ever appears
-          float edgeFeather = smoothstep(0.08, 0.42, geoNdotV + (fluidTurbulence - 0.5) * 0.22);
+          // Keep sphere edge solid enough to meet the additive halo ring seamlessly
+          float edgeFeather = smoothstep(0.01, 0.18, geoNdotV + (fluidTurbulence - 0.5) * 0.08);
           gl_FragColor = vec4(col, edgeFeather * uExplodeFade);
         }
       `,
@@ -744,7 +743,7 @@ export default function CosmicCanvas({
           float spicule = pow(clamp(r1 * 0.65 + r2 * 0.35, 0.0, 1.0), 2.8);
           vSpicule = spicule;
 
-          vec3 displaced = position + normal * spicule * (0.14 + uStress * 0.22);
+          vec3 displaced = position + normal * spicule * (0.015 + uStress * 0.16);
           vec4 wp = modelMatrix * vec4(displaced, 1.0);
           vWorldPos = wp.xyz;
           gl_Position = projectionMatrix * viewMatrix * wp;
@@ -763,20 +762,19 @@ export default function CosmicCanvas({
           if (uExplodeFade <= 0.001) discard;
           vec3 viewDir = normalize(cameraPosition - vWorldPos);
           float ndotv = abs(dot(vNormal, viewDir));
-          // Fade out completely before the outer silhouette (ndotv < 0.28) and before the dark center (ndotv > 0.72)
-          // so there is zero visible circular shell edge
-          float ringZone = smoothstep(0.75, 0.38, ndotv) * smoothstep(0.14, 0.42, ndotv);
+          // Silky soft outer rim glow with zero hard polygonal teeth
+          float ringZone = smoothstep(0.54, 0.30, ndotv) * smoothstep(0.14, 0.32, ndotv);
 
-          vec3 deepSapphire = vec3(0.08, 0.38, 0.96);
-          vec3 cherenkovCyan = vec3(0.32, 0.82, 1.00);
+          vec3 deepSapphire = vec3(0.02, 0.44, 0.84);
+          vec3 cherenkovCyan = vec3(0.32, 0.85, 1.00);
           vec3 hotIceWhite = vec3(0.96, 0.99, 1.00);
 
-          float filament = pow(vSpicule, 1.6);
-          vec3 col = mix(deepSapphire, cherenkovCyan, 0.45 + 0.35 * sin(uTime * 1.8 + vObjPos.x * 6.0));
-          col = mix(col, hotIceWhite, smoothstep(0.25, 0.75, filament));
+          float filament = pow(vSpicule, 2.0);
+          vec3 col = mix(deepSapphire, cherenkovCyan, 0.55 + 0.30 * sin(uTime * 1.8 + vObjPos.x * 6.0));
+          col = mix(col, hotIceWhite, smoothstep(0.30, 0.78, filament));
 
-          float alpha = ringZone * filament * (0.85 + uStress * 0.45) * uExplodeFade * 0.95;
-          gl_FragColor = vec4(col * 1.45, clamp(alpha, 0.0, 0.85));
+          float alpha = ringZone * filament * (0.38 + uStress * 0.35) * uExplodeFade * 0.45;
+          gl_FragColor = vec4(col, clamp(alpha, 0.0, 0.42));
         }
       `,
       transparent: true,
@@ -951,84 +949,76 @@ export default function CosmicCanvas({
           float plasmaFilaments = ridgedFbm2(vUv * 6.8 + dir * (curlA - 0.5) * 1.6 - dir * t * 0.65);
           float fineFilaments   = ridgedFbm2(vUv * 13.5 - tang * (curlB - 0.5) * 1.2 - dir * t * 0.95);
 
-          float radialWarp = (curlA - 0.5) * 0.075 + (plasmaFilaments - 0.5) * 0.055;
+          float radialWarp = (curlA - 0.5) * 0.026 + (plasmaFilaments - 0.5) * 0.018;
           float rWarped = max(0.0, r + radialWarp);
 
-          // Keep the inner cavity (rWarped < 0.25) crisp and dark so the 3D boiling singularity core is never washed out
-          float innerHoleMask = smoothstep(0.18, 0.285, rWarped);
+          // Smooth inner mask starting inside moonGeo's perimeter so there is zero gap between core and ring
+          float innerHoleMask = smoothstep(0.245, 0.320, rWarped);
 
-          // Ragged, incandescent inward-licking plasma tongues along the boundary of the dark core
-          float innerTongues = exp(-pow((rWarped - 0.225) / 0.038, 2.0))
-                             * pow(clamp(plasmaFilaments * 0.75 + fineFilaments * 0.45, 0.0, 1.0), 1.8) * 1.15;
+          // Soft inward-curling cyan plasma tendrils connecting the bright ring to the swirling interior
+          float innerTongues = exp(-pow((rWarped - 0.305) / 0.028, 2.0))
+                             * pow(clamp(plasmaFilaments * 0.72 + fineFilaments * 0.42, 0.0, 1.0), 1.6) * 0.82;
 
-          // 2. INTENSE MULTI-LAYERED BLAZING BLUE CORONA RING (High-contrast white-hot spine + fibrous blue plasma)
-          float ringSpine = exp(-pow((rWarped - 0.298) / 0.046, 2.0)) * innerHoleMask * (0.78 + 0.55 * plasmaFilaments);
-          float ringTurbulence = exp(-pow((rWarped - 0.325) / 0.082, 2.0)) * innerHoleMask
-                               * (0.52 + 0.75 * pow(plasmaFilaments * 0.68 + fineFilaments * 0.32, 1.5));
-          float ringOuterAtmosphere = exp(-pow((rWarped - 0.355) / 0.115, 2.0)) * innerHoleMask * 0.38;
+          // 2. SILKY INCANDESCENT WHITE-HOT RING WRAPPED IN ELECTRIC CYAN HALO (Seated seamlessly on sphere rim)
+          float ringSpine = exp(-pow((rWarped - 0.338) / 0.020, 2.0)) * innerHoleMask * (1.06 + 0.36 * plasmaFilaments);
+          float ringTurbulence = exp(-pow((rWarped - 0.347) / 0.042, 2.0)) * innerHoleMask
+                               * (0.72 + 0.48 * pow(plasmaFilaments * 0.65 + fineFilaments * 0.35, 1.5));
+          float ringOuterAtmosphere = exp(-pow((rWarped - 0.372) / 0.128, 2.0)) * smoothstep(0.20, 0.34, rWarped) * 0.62;
 
-          // 3. ASYMMETRIC SUPER-INTENSE MAGNETIC RECONNECTION FLARE KNOTS (Lower-Right & Upper-Left)
-          vec2 hotspotPosLR = vec2(0.225, -0.175);
-          vec2 hotspotPosUL = vec2(-0.235, 0.155);
-          float distLR = length(vUv - hotspotPosLR + (curlA - 0.5) * 0.052);
-          float distUL = length(vUv - hotspotPosUL + (curlB - 0.5) * 0.052);
-          float flareLR = (exp(-distLR * distLR * 95.0) * 1.35 + exp(-distLR * distLR * 28.0) * 0.48 * plasmaFilaments)
-                        * (1.08 + 0.16 * sin(uTime * 3.8));
-          float flareUL = (exp(-distUL * distUL * 115.0) * 0.92 + exp(-distUL * distUL * 34.0) * 0.35 * fineFilaments)
-                        * (0.92 + 0.14 * cos(uTime * 3.2));
-          float hotspots = flareLR + flareUL;
+          // 3. ORGANIC CIRCUMFERENTIAL CORONAL FLARE WISPS (Cohesive around the ring without off-center white blobs)
+          float ringFlareBand = exp(-pow((rWarped - 0.342) / 0.026, 2.0)) * innerHoleMask;
+          float angularShimmer = 0.5 + 0.5 * sin(angle * 3.0 + t * 0.6 + curlA * 3.4);
+          float hotspots = ringFlareBand * (0.28 + 0.42 * pow(plasmaFilaments, 1.8) * angularShimmer);
 
-          // 4. COMPACT, RAZOR-SHARP MAGNETIC CORONAL NEEDLE RAYS (Decreased reach, realistic fibrous structure)
-          float rayNoiseA = noise2(vec2(angle * 9.5 + sin(t * 0.25), r * 2.8 - t * 0.65));
-          float rayNoiseB = noise2(vec2(angle * 24.0 - cos(t * 0.22), r * 4.2 - t * 0.95));
-          float sharpNeedles = pow(0.5 + 0.5 * sin(angle * 46.0 + rayNoiseA * 6.0), 3.4);
-          float filamentStreams = pow(0.5 + 0.5 * cos(angle * 18.0 - rayNoiseB * 4.5), 2.4);
-          float rayStructure = sharpNeedles * 0.55 + filamentStreams * 0.38 + plasmaFilaments * 0.28;
+          // 4. SOFT SILKY CORONAL LIGHT RAYS RADIATING SMOOTHLY INTO THE STARFIELD
+          float rayNoiseA = noise2(vec2(angle * 8.0 + sin(t * 0.22), r * 2.4 - t * 0.55));
+          float rayNoiseB = noise2(vec2(angle * 20.0 - cos(t * 0.18), r * 3.8 - t * 0.85));
+          float softRays = pow(0.5 + 0.5 * sin(angle * 36.0 + rayNoiseA * 5.2), 2.8);
+          float filamentStreams = pow(0.5 + 0.5 * cos(angle * 14.0 - rayNoiseB * 4.0), 2.2);
+          float rayStructure = softRays * 0.48 + filamentStreams * 0.38 + plasmaFilaments * 0.22;
 
-          float rayEnvelope = smoothstep(0.21, 0.31, rWarped)
-                            * exp(-max(0.0, r - 0.295) * 6.6)
-                            * smoothstep(0.70, 0.41, r);
-          float coronalRays = rayStructure * rayEnvelope * 0.68;
+          float rayEnvelope = smoothstep(0.31, 0.365, rWarped)
+                            * exp(-max(0.0, r - 0.35) * 5.4)
+                            * smoothstep(0.84, 0.44, r);
+          float coronalRays = rayStructure * rayEnvelope * 0.58;
 
-          // 5. HIGH-ENERGY EJECTED PLASMA MICRO-SPARKS & DROPLETS AROUND THE RING RIM
-          vec2 sparkGrid = vUv * 28.0;
+          // 5. FINE PINPOINT WHITE/CYAN PLASMA SPARKS SCATTERED AROUND THE CORONA
+          vec2 sparkGrid = vUv * 32.0;
           vec2 sCell = floor(sparkGrid);
           vec2 sFract = fract(sparkGrid) - vec2(0.5);
           float sRand = hash21(sCell);
-          vec2 sJitter = (vec2(hash21(sCell + 11.3), hash21(sCell + 27.9)) - vec2(0.5)) * 0.58;
+          vec2 sJitter = (vec2(hash21(sCell + 11.3), hash21(sCell + 27.9)) - vec2(0.5)) * 0.62;
           float sDist = length(sFract - sJitter);
-          float sparkZone = exp(-pow((r - 0.40) / 0.105, 2.0));
-          float microSparks = exp(-sDist * sDist * 220.0) * step(0.83, sRand) * sparkZone
-                            * (0.65 + 0.35 * sin(uTime * 4.5 + sRand * 14.0));
+          float sparkZone = exp(-pow((r - 0.44) / 0.115, 2.0));
+          float microSparks = exp(-sDist * sDist * 260.0) * step(0.82, sRand) * sparkZone
+                            * (0.65 + 0.35 * sin(uTime * 4.2 + sRand * 14.0));
 
-          // 6. PHYSICALLY INSPIRED BLACKBODY BLUE PLASMA COLOR RAMP & HDR TONEMAPPING
-          vec3 deepCobalt      = vec3(0.02, 0.12, 0.58);
-          vec3 magneticSapphire= vec3(0.10, 0.46, 0.98);
-          vec3 cherenkovAzure  = vec3(0.36, 0.84, 1.00);
-          vec3 relativisticWhite = vec3(0.97, 0.995, 1.00);
+          // 6. HIGH-CONTRAST WHITE-HOT RING + LUMINOUS CYAN/SAPPHIRE CORONA
+          vec3 deepCobalt        = vec3(0.015, 0.360, 0.720);
+          vec3 electricCobalt    = vec3(0.045, 0.580, 0.950);
+          vec3 cherenkovAzure    = vec3(0.380, 0.880, 1.000);
+          vec3 relativisticWhite = vec3(1.000, 1.000, 1.000);
 
           float energy = ringSpine * 1.45
-                       + ringTurbulence * 0.95
-                       + ringOuterAtmosphere * 0.45
-                       + coronalRays * 0.58
-                       + innerTongues * 0.85
-                       + hotspots * 1.35
-                       + microSparks * 1.10;
+                       + ringTurbulence * 0.85
+                       + ringOuterAtmosphere * 0.65
+                       + coronalRays * 0.55
+                       + innerTongues * 0.65
+                       + hotspots * 0.90
+                       + microSparks * 1.05;
           energy *= (1.0 + uStress * 0.75);
 
-          // Temperature-driven spectral color synthesis
-          vec3 rawCol = deepCobalt * (ringOuterAtmosphere + coronalRays * 0.65)
-                      + magneticSapphire * (ringTurbulence * 1.15 + coronalRays * 0.95 + innerTongues * 0.75)
-                      + cherenkovAzure * (ringSpine * 1.25 + ringTurbulence * 0.75 + innerTongues * 0.95 + hotspots * 0.75)
-                      + relativisticWhite * (pow(ringSpine, 1.65) * 1.25 + hotspots * 1.35 + microSparks * 1.15 + pow(innerTongues, 2.0) * 0.55);
+          vec3 rawCol = deepCobalt * (ringOuterAtmosphere * 0.85 + coronalRays * 0.65)
+                      + electricCobalt * (ringTurbulence * 1.05 + coronalRays * 0.85 + innerTongues * 0.70)
+                      + cherenkovAzure * (ringSpine * 1.15 + ringOuterAtmosphere * 0.70 + innerTongues * 0.80 + hotspots * 0.75)
+                      + relativisticWhite * (pow(ringSpine, 1.75) * 1.45 + hotspots * 1.10 + microSparks * 1.15);
 
-          // Filmic HDR curve so intense regions glow with realistic white-blue brilliance without flat clipping
           vec3 hdrCol = (rawCol * (2.51 * rawCol + 0.03)) / (rawCol * (2.43 * rawCol + 0.59) + 0.14);
 
-          float outerVignette = smoothstep(0.74, 0.46, r);
-          float alpha = clamp(energy * outerVignette * 0.95, 0.0, 0.95) * uExplodeFade;
+          float outerVignette = smoothstep(0.86, 0.46, r);
+          float alpha = clamp(energy * outerVignette * 0.92, 0.0, 0.94) * uExplodeFade;
 
-          gl_FragColor = vec4(hdrCol * 1.28, alpha);
+          gl_FragColor = vec4(hdrCol * 1.22, alpha);
         }
       `,
       transparent: true,
@@ -3223,10 +3213,8 @@ export default function CosmicCanvas({
         (1.0 + Math.sin(elapsed * 2.2) * 0.02) * (1.0 - implosionSqueeze * 0.975);
       const isDesktop = window.innerWidth >= 1024;
       const baseOffsetX = 0;
-      // Shifted higher to perfectly align the ring behind the headline
-      const baseOffsetY = isDesktop ? 0.95 : 0.75;
-      // Massively increased scale to match the target mockup
-      const targetScale = (isDesktop ? 3.5 : 2.2) * Math.max(0.018, moonScale);
+      const baseOffsetY = isDesktop ? 1.22 : 1.75;
+      const targetScale = (isDesktop ? 2.35 : 1.12) * Math.max(0.018, moonScale);
 
       moonGroup.scale.setScalar(targetScale);
       moonGroup.rotation.y =
@@ -3234,8 +3222,8 @@ export default function CosmicCanvas({
       moonGroup.rotation.x =
         Math.sin(elapsed * 0.35) * 0.08 - currentPointer.y * 0.35 + dragOffset.y * 0.5;
 
-      moonGroup.position.x = baseOffsetX + currentPointer.x * 0.42 * moonFade;
-      moonGroup.position.y = baseOffsetY + currentPointer.y * 0.32 * moonFade;
+      moonGroup.position.x = baseOffsetX + currentPointer.x * 0.35 * moonFade;
+      moonGroup.position.y = baseOffsetY + currentPointer.y * 0.25 * moonFade;
       moonGroup.visible = moonFade > 0.005;
       if (moonGroup.visible) {
         haloMesh.lookAt(camera.position);

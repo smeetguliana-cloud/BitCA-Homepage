@@ -27,16 +27,6 @@ export const AboutBitCA: React.FC = () => {
   return (
     <section id="about" className="py-24 sm:py-36 px-4 sm:px-8 lg:px-16 relative">
       <div className="max-w-7xl mx-auto">
-        
-        {/* Section Header */}
-        <div className="flex items-center gap-3 mb-8">
-          <span className="w-2 h-2 bg-[#06b6d4]" />
-          <span className="font-['Space_Mono'] text-xs uppercase tracking-widest text-[#06b6d4]">
-            SECTION 02 // DOSSIER
-          </span>
-          <div className="h-[1px] flex-1 bg-[#06b6d4]/20" />
-        </div>
-
         {/* 2-Column Center-Avoidant Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
           
@@ -95,13 +85,6 @@ We regularly organize interactive workshops, seminars, and events on topics like
                   </span>
                 ))}
               </div>
-
-              {/* HUD Status line */}
-              <div className="pt-4 border-t border-[#06b6d4]/20 flex items-center justify-between text-xs font-['Space_Mono'] text-[#94a3b8]">
-                <span>STATUS: OPERATIONAL</span>
-                <span>EST. 2024 // K.C. COLLEGE</span>
-              </div>
-
             </div>
           </div>
 

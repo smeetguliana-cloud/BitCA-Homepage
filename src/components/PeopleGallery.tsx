@@ -13,13 +13,6 @@ export const PeopleGallery: React.FC<PeopleGalleryProps> = () => {
         
         {/* Main Section Header */}
         <div className="bg-black/80 backdrop-blur-md p-6 sm:p-8 border border-[#06b6d4]/30 rounded-xl max-w-3xl">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="w-2 h-2 bg-[#ec4899]" />
-            <span className="font-['Space_Mono'] text-xs uppercase tracking-widest text-[#ec4899]">
-              PERSONNEL ROSTER // MULTIVERSE 404
-            </span>
-            <div className="h-[1px] flex-1 bg-[#ec4899]/20" />
-          </div>
           <h2 className="font-['Orbitron'] font-black text-3xl sm:text-5xl text-[#ffffff] tracking-wide mb-3">
             The Architects
           </h2>
@@ -29,7 +22,7 @@ export const PeopleGallery: React.FC<PeopleGalleryProps> = () => {
         </div>
 
         {/* 5 Sequential Sections Stacked Vertically */}
-        {SECTIONS.map((sec, secIndex) => {
+        {SECTIONS.map((sec) => {
           const members = ARCHITECTS.filter((p) => p.category === sec.category);
 
           const formattedSlides = members.map((person) => ({
@@ -44,18 +37,10 @@ export const PeopleGallery: React.FC<PeopleGalleryProps> = () => {
             <div key={sec.category} className="space-y-6">
               
               {/* Category Header */}
-              <div className="flex items-center justify-between border-b border-[#06b6d4]/20 pb-3">
-                <div className="flex items-center gap-3">
-                  <span className="font-['Space_Mono'] text-xs text-[#06b6d4] font-bold">
-                    0{secIndex + 1} //
-                  </span>
-                  <h3 className="font-['Orbitron'] text-xl sm:text-2xl font-bold text-white tracking-wide">
-                    {sec.title}
-                  </h3>
-                </div>
-                <span className="font-['Space_Mono'] text-xs text-[#94a3b8] tracking-widest uppercase">
-                  {members.length} ARCHITECTS
-                </span>
+              <div className="flex items-center border-b border-[#06b6d4]/20 pb-3">
+                <h3 className="font-['Orbitron'] text-xl sm:text-2xl font-bold text-white tracking-wide">
+                  {sec.title}
+                </h3>
               </div>
 
               {/* 3D Coverflow Slideshow Gallery */}
