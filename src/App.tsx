@@ -6,6 +6,7 @@ import { PeopleGallery } from './components/PeopleGallery';
 import { EventsPortal } from './components/EventsPortal';
 import { WhatWeDo } from './components/WhatWeDo';
 import { Footer } from './components/Footer';
+import { ChatbotModal } from './components/ChatbotModal';
 
 // Import the newly added 3D background component
 import CosmicCanvas from './components/CosmicCanvas';
@@ -60,6 +61,9 @@ export default function App() {
         
         <Footer />
       </div>
+
+      {/* Global Floating BitCA AI Assistant */}
+      <ChatbotModal />
     </div>
   );
 }
