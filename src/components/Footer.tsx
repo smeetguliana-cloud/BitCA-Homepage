@@ -7,14 +7,14 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="border-t border-[#06b6d4]/20 bg-black/90 relative z-10 py-12 px-4 sm:px-8 lg:px-16">
+    <footer className="border-t border-[#8B5CF6]/25 bg-[#050508]/90 backdrop-blur-xl relative z-10 py-12 px-4 sm:px-8 lg:px-16">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         
         {/* Left: Brand & Institution */}
         <div className="text-center md:text-left space-y-2">
           <div className="flex items-center justify-center md:justify-start gap-2">
-            <span className="w-2 h-2 bg-[#06b6d4] inline-block shadow-[0_0_8px_#06b6d4]" />
-            <span className="font-['Orbitron'] font-bold text-base text-white tracking-widest">
+            <span className="w-2 h-2 bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] inline-block shadow-[0_0_8px_rgba(168,85,247,0.7)]" />
+            <span className="font-['Orbitron'] font-bold text-base text-[#F2F7FF] tracking-widest">
               MULTIVERSE 404
             </span>
           </div>
@@ -28,16 +28,16 @@ export const Footer: React.FC = () => {
 
         {/* Center: Navigation Mirror */}
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-['Space_Mono'] text-[#94a3b8]">
-          <a href="#hero" className="hover:text-[#06b6d4] transition-colors">
+          <a href="#hero" className="hover:text-[#C084FC] transition-colors">
             ORIGIN
           </a>
-          <a href="#about" className="hover:text-[#06b6d4] transition-colors">
+          <a href="#about" className="hover:text-[#C084FC] transition-colors">
             ABOUT BITCA
           </a>
-          <a href="#people" className="hover:text-[#06b6d4] transition-colors">
+          <a href="#people" className="hover:text-[#C084FC] transition-colors">
             THE ARCHITECTS
           </a>
-          <a href="#events-trigger" className="hover:text-[#ec4899] transition-colors">
+          <a href="#events-trigger" className="hover:text-[#F472B6] transition-colors">
             PORTAL
           </a>
         </div>
@@ -49,7 +49,7 @@ export const Footer: React.FC = () => {
               href="https://www.instagram.com/bitcav2.4?vrfl=aWViamY2ZmQzb2xv"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 bg-black/70 border border-[#06b6d4]/30 text-[#94a3b8] hover:text-[#ec4899] hover:border-[#ec4899] transition-colors"
+              className="p-2 bg-[#050508]/85 border border-[#A855F7]/40 text-[#C084FC] hover:text-[#F472B6] hover:border-[#EC4899]/70 transition-colors"
               aria-label="Instagram"
             >
               <Instagram className="w-4 h-4" />
@@ -59,7 +59,7 @@ export const Footer: React.FC = () => {
           <button
             onClick={scrollToTop}
             type="button"
-            className="p-2 bg-black/70 border border-[#06b6d4]/30 text-[#94a3b8] hover:text-white hover:border-[#06b6d4] transition-colors"
+            className="p-2 bg-[#050508]/85 border border-[#A855F7]/40 text-[#C084FC] hover:text-[#F2F7FF] hover:border-[#EC4899]/70 transition-colors"
             title="Scroll to dimension origin"
             aria-label="Scroll to top"
           >

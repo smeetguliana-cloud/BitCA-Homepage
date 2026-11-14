@@ -4,6 +4,7 @@ import { Hero } from './components/Hero';
 import { AboutBitCA } from './components/AboutBitCA';
 import { PeopleGallery } from './components/PeopleGallery';
 import { EventsPortal } from './components/EventsPortal';
+import { WhatWeDo } from './components/WhatWeDo';
 import { Footer } from './components/Footer';
 
 // Import the newly added 3D background component
@@ -54,6 +55,7 @@ export default function App() {
           <AboutBitCA />
           <PeopleGallery soundEnabled={soundEnabled} />
           <EventsPortal soundEnabled={soundEnabled} />
+          <WhatWeDo />
         </main>
         
         <Footer />

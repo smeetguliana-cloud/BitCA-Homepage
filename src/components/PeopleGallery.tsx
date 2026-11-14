@@ -12,11 +12,17 @@ export const PeopleGallery: React.FC<PeopleGalleryProps> = () => {
       <div className="max-w-7xl mx-auto space-y-20">
         
         {/* Main Section Header */}
-        <div className="bg-black/80 backdrop-blur-md p-6 sm:p-8 border border-[#06b6d4]/30 rounded-xl max-w-3xl">
-          <h2 className="font-['Orbitron'] font-black text-3xl sm:text-5xl text-[#ffffff] tracking-wide mb-3">
+        <div
+          className="text-center mx-auto max-w-2xl px-4 py-3 space-y-3"
+          style={{
+            textShadow:
+              '0 2px 6px rgba(0, 0, 0, 0.98), 0 4px 18px rgba(0, 0, 0, 0.95), 0 0 28px rgba(2, 4, 10, 0.9)',
+          }}
+        >
+          <h2 className="font-['Orbitron'] font-black text-3xl sm:text-5xl text-[#F2F7FF] tracking-wide">
             The Architects
           </h2>
-          <p className="max-w-xl font-['Plus_Jakarta_Sans'] text-sm sm:text-base text-white">
+          <p className="font-['Plus_Jakarta_Sans'] text-sm sm:text-base text-[#F2F7FF]/90">
             The visionary leaders, faculty mentors, core executive leads, and departmental heads driving the Multiverse 404 ecosystem.
           </p>
         </div>
@@ -37,10 +43,17 @@ export const PeopleGallery: React.FC<PeopleGalleryProps> = () => {
             <div key={sec.category} className="space-y-6">
               
               {/* Category Header */}
-              <div className="flex items-center border-b border-[#06b6d4]/20 pb-3">
-                <h3 className="font-['Orbitron'] text-xl sm:text-2xl font-bold text-white tracking-wide">
+              <div
+                className="flex flex-col items-center text-center mx-auto space-y-3"
+                style={{
+                  textShadow:
+                    '0 2px 6px rgba(0, 0, 0, 0.98), 0 4px 18px rgba(0, 0, 0, 0.95), 0 0 28px rgba(2, 4, 10, 0.9)',
+                }}
+              >
+                <h3 className="font-['Orbitron'] text-xl sm:text-2xl font-bold text-[#F2F7FF] tracking-wide">
                   {sec.title}
                 </h3>
+                <div className="w-24 h-[1px] mx-auto bg-gradient-to-r from-transparent via-[#00D9FF]/50 to-transparent" />
               </div>
 
               {/* 3D Coverflow Slideshow Gallery */}
@@ -50,7 +63,7 @@ export const PeopleGallery: React.FC<PeopleGalleryProps> = () => {
                 cardHeight={373}
                 gap={15}
                 autoplay={true}
-                titleColor="#06b6d4"
+                titleColor="#FCD34D"
                 transition={{
                   type: 'tween',
                   duration: 1.2,

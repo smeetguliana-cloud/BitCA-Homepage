@@ -36,7 +36,7 @@ export const Smooth3DSlideshow: React.FC<Smooth3DSlideshowProps> = ({
   autoplay = false,
   autoplayInterval = 4000,
   autoplayDirection = 'rightToLeft',
-  titleColor = '#06b6d4',
+  titleColor = '#FCD34D',
   className = '',
   style = {},
   transition,
@@ -177,14 +177,14 @@ export const Smooth3DSlideshow: React.FC<Smooth3DSlideshowProps> = ({
                 pointerEvents: !isStatic ? 'auto' : 'none',
                 transition: `transform ${transitionDuration} ${transitionEase}, opacity ${transitionDuration} ease`,
               }}
-              className={`absolute top-0 rounded-xl overflow-hidden cursor-pointer bg-black/90 border transition-all duration-300 ${
+              className={`absolute top-0 rounded-xl cursor-pointer transition-all duration-300 ${
                 isCenter
-                  ? 'border-[#06b6d4] shadow-[0_0_30px_rgba(6,182,212,0.4)]'
-                  : 'border-[#06b6d4]/20 hover:border-[#06b6d4]/50'
+                  ? 'p-[1.5px] bg-gradient-to-br from-[#00D9FF] via-[#A855F7] to-[#EC4899] shadow-[0_0_32px_rgba(0,217,255,0.22),0_0_26px_rgba(168,85,247,0.24)]'
+                  : 'p-[1px] bg-gradient-to-br from-[#00D9FF]/35 via-[#A855F7]/30 to-[#EC4899]/35 hover:from-[#00D9FF]/65 hover:via-[#A855F7]/60 hover:to-[#EC4899]/65'
               }`}
             >
               {/* Photo Image */}
-              <div className="relative w-full h-full bg-[#07070d]">
+              <div className="relative w-full h-full rounded-[10.5px] overflow-hidden bg-[#050508]/90 backdrop-blur-xl">
                 <img
                   src={slide.image.src}
                   alt={slide.image.alt}
@@ -195,6 +195,13 @@ export const Smooth3DSlideshow: React.FC<Smooth3DSlideshowProps> = ({
                       target.src = '/' + slide.image.src.replace(/^(\.\/|\/)/, '');
                     }
                   }}
+                />
+
+                {/* Top Edge Electric Cyan -> Violet -> Magenta Accent Highlight */}
+                <div
+                  className={`absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-[#00D9FF] via-[#A855F7] to-[#EC4899] pointer-events-none z-20 transition-opacity duration-300 ${
+                    isCenter ? 'opacity-95' : 'opacity-35'
+                  }`}
                 />
 
                 {/* Scrim Overlay */}
@@ -212,13 +219,13 @@ export const Smooth3DSlideshow: React.FC<Smooth3DSlideshowProps> = ({
                 {/* Title Overlay at Bottom */}
                 {slide.title && (
                   <div className="absolute bottom-0 left-0 right-0 p-4 z-20 pointer-events-none">
-                    <h4 className="font-['Orbitron'] text-base sm:text-lg font-bold text-white tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                    <h4 className="font-['Orbitron'] text-base sm:text-lg font-bold text-[#F2F7FF] tracking-wide leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                       {nameText}
                     </h4>
                     {roleText && (
                       <p
-                        className="font-['Space_Mono'] text-xs font-bold uppercase mt-1 tracking-wider drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]"
-                        style={{ color: titleColor }}
+                        className="font-['Space_Mono'] text-xs font-bold uppercase mt-1 tracking-wider drop-shadow-[0_1px_3px_rgba(0,0,0,0.95)]"
+                        style={{ color: isCenter ? titleColor : '#C084FC' }}
                       >
                         {roleText}
                       </p>
@@ -226,11 +233,11 @@ export const Smooth3DSlideshow: React.FC<Smooth3DSlideshowProps> = ({
                   </div>
                 )}
 
-                {/* Tactical Corner Ticks */}
-                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#06b6d4] pointer-events-none" />
-                <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#ec4899] pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#ec4899] pointer-events-none" />
-                <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#06b6d4] pointer-events-none" />
+                {/* Corner Accent Highlights (Electric Cyan -> Magenta) */}
+                <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#00D9FF] pointer-events-none z-20" />
+                <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#EC4899] pointer-events-none z-20" />
+                <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#EC4899] pointer-events-none z-20" />
+                <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#00D9FF] pointer-events-none z-20" />
               </div>
             </div>
           );
@@ -242,15 +249,15 @@ export const Smooth3DSlideshow: React.FC<Smooth3DSlideshowProps> = ({
         <button
           type="button"
           onClick={prevSlide}
-          className="p-2.5 rounded-lg bg-black/70 border border-[#06b6d4]/40 text-[#06b6d4] hover:bg-[#06b6d4]/20 hover:border-[#06b6d4] hover:shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all cursor-pointer active:scale-95"
+          className="p-2.5 rounded-lg bg-[#050508]/85 backdrop-blur-xl border border-[#A855F7]/40 text-[#C084FC] hover:bg-[#8B5CF6]/20 hover:border-[#EC4899]/70 hover:text-[#F472B6] hover:shadow-[0_0_18px_rgba(236,72,153,0.3)] transition-all cursor-pointer active:scale-95"
           aria-label="Previous slide"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
 
-        {/* Index Telemetry Badge */}
-        <div className="font-['Space_Mono'] text-xs tracking-widest text-[#94a3b8] px-3 py-1 bg-black/60 border border-white/10 rounded">
-          <span className="text-[#06b6d4] font-bold">
+        {/* Active Page Indicator Pill */}
+        <div className="font-['Space_Mono'] text-xs tracking-widest text-[#94a3b8] px-3.5 py-1.5 bg-[#050508]/85 backdrop-blur-xl border border-[#A855F7]/40 hover:border-[#EC4899]/70 rounded transition-colors">
+          <span className="text-[#C084FC] font-bold">
             {currentIndex + 1 < 10 ? `0${currentIndex + 1}` : currentIndex + 1}
           </span>
           <span className="text-white/30 mx-1.5">/</span>
@@ -260,7 +267,7 @@ export const Smooth3DSlideshow: React.FC<Smooth3DSlideshowProps> = ({
         <button
           type="button"
           onClick={nextSlide}
-          className="p-2.5 rounded-lg bg-black/70 border border-[#06b6d4]/40 text-[#06b6d4] hover:bg-[#06b6d4]/20 hover:border-[#06b6d4] hover:shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all cursor-pointer active:scale-95"
+          className="p-2.5 rounded-lg bg-[#050508]/85 backdrop-blur-xl border border-[#A855F7]/40 text-[#C084FC] hover:bg-[#8B5CF6]/20 hover:border-[#EC4899]/70 hover:text-[#F472B6] hover:shadow-[0_0_18px_rgba(236,72,153,0.3)] transition-all cursor-pointer active:scale-95"
           aria-label="Next slide"
         >
           <ChevronRight className="w-5 h-5" />
