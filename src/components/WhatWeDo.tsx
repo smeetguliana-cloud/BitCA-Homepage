@@ -74,7 +74,7 @@ export const WhatWeDo: React.FC = () => {
         >
           <h2 className="font-['Orbitron'] font-black text-3xl sm:text-5xl text-[#F2F7FF] tracking-wider">
             WHAT WE DO
-            <span className="text-[#00D9FF] drop-shadow-[0_0_12px_rgba(0,217,255,0.65)]">.</span>
+            
           </h2>
           <p className="font-['Space_Grotesk'] text-sm sm:text-base text-[#AFC5E8] tracking-wide">
             Beyond boundaries. Beyond possibilities.

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutBitCA } from './components/AboutBitCA';
+import { VisionexaSections } from './components/visionexa/VisionexaSections';
 import { PeopleGallery } from './components/PeopleGallery';
 import { EventsPortal } from './components/EventsPortal';
 import { WhatWeDo } from './components/WhatWeDo';
@@ -54,6 +55,7 @@ export default function App() {
         <main className="flex-1">
           <Hero soundEnabled={soundEnabled} />
           <AboutBitCA />
+          <VisionexaSections />
           <PeopleGallery soundEnabled={soundEnabled} />
           <EventsPortal soundEnabled={soundEnabled} />
           <WhatWeDo />
