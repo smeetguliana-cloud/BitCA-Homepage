@@ -42,23 +42,21 @@ const eventImages: CarouselItem[] = [
 
 export const VisionexaSections: React.FC = () => {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [cubeSize, setCubeSize] = React.useState<number>(() => {
-    if (typeof window === 'undefined') return 440;
+  const computeCubeSize = () => {
+    if (typeof window === 'undefined') return 360;
     const w = window.innerWidth;
-    if (w < 360) return 200;
-    if (w < 430) return 245;
-    if (w < 600) return 300;
-    return 440;
-  });
+    const h = window.innerHeight;
+    if (w < 360) return 195;
+    if (w < 430) return 225;
+    if (w < 600) return 260;
+    if (w < 1024) return 310;
+    return h < 820 ? 330 : 360;
+  };
+
+  const [cubeSize, setCubeSize] = React.useState<number>(computeCubeSize);
 
   useEffect(() => {
-    const updateSize = () => {
-      const w = window.innerWidth;
-      if (w < 360) setCubeSize(200);
-      else if (w < 430) setCubeSize(245);
-      else if (w < 600) setCubeSize(300);
-      else setCubeSize(440);
-    };
+    const updateSize = () => setCubeSize(computeCubeSize());
     updateSize();
     window.addEventListener('resize', updateSize, { passive: true });
     return () => window.removeEventListener('resize', updateSize);
@@ -148,7 +146,8 @@ export const VisionexaSections: React.FC = () => {
                 animation="autoplay"
                 dragSensitivity={5}
                 ease={{
-                  duration: 1.25,
+                  duration: 1.9,
+                  delay: 1.6,
                   ease: [0.44, 0, 0.56, 1],
                 }}
               />

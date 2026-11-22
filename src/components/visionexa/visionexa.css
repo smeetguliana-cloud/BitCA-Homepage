@@ -793,10 +793,28 @@
   background: linear-gradient(135deg, rgba(18, 39, 64, 0.82), rgba(7, 15, 30, 0.90));
 }
 
+.vx-root.vx-embedded .vx-about {
+  padding-block: clamp(48px, 6vw, 84px);
+}
+
+.vx-root.vx-embedded .vx-about__feature {
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(32px, 5vw, 72px);
+}
+
 .vx-root.vx-embedded .vx-about__cube {
   min-width: 0;
   width: 100%;
+  max-width: 420px;
+  min-height: 390px;
+  height: 390px;
+  aspect-ratio: auto;
   background: radial-gradient(circle, rgba(28, 119, 176, 0.14), transparent 68%);
+}
+
+.vx-root.vx-embedded .vx-about__cube > .framer-box-carousel {
+  min-height: 390px;
+  height: 390px;
 }
 
 .vx-root.vx-embedded .vx-about__copy {
@@ -816,21 +834,33 @@
 }
 
 .vx-root.vx-embedded .vx-brand-lockup {
-  gap: clamp(10px, 1.6vw, 18px);
+  gap: clamp(10px, 1.4vw, 16px);
+  margin: 0 0 22px;
+  max-width: 100%;
+}
+
+.vx-root.vx-embedded .vx-brand-lockup > div {
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  white-space: normal;
+  min-width: 0;
 }
 
 .vx-root.vx-embedded .vx-logo3d {
-  width: clamp(64px, 7.2vw, 102px);
-  height: clamp(64px, 7.2vw, 102px);
+  width: clamp(54px, 5.5vw, 78px);
+  height: clamp(54px, 5.5vw, 78px);
 }
 
 .vx-root.vx-embedded .vx-brand-name {
-  font-size: clamp(1.15rem, 3.1vw, 2.65rem);
+  font-size: clamp(1.05rem, 2.15vw, 1.9rem);
+  line-height: 1.15;
+  white-space: normal;
+  overflow-wrap: break-word;
   text-shadow: 0 2px 14px rgba(2, 4, 10, 0.96), 0 0 24px rgba(2, 4, 10, 0.85);
 }
 
 .vx-root.vx-embedded .vx-brand-year {
-  font-size: clamp(1.02rem, 2.2vw, 1.85rem);
+  font-size: clamp(0.95rem, 1.7vw, 1.5rem);
   text-shadow: 0 2px 14px rgba(2, 4, 10, 0.96), 0 0 24px rgba(2, 4, 10, 0.85);
 }
 
@@ -846,55 +876,58 @@
 @media (max-width: 900px) {
   .vx-root.vx-embedded .vx-about__feature {
     grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
+    gap: 28px;
   }
   .vx-root.vx-embedded .vx-about__cube {
     max-width: 100%;
-    min-height: 480px;
-    height: 480px;
+    min-height: 350px;
+    height: 350px;
   }
   .vx-root.vx-embedded .vx-about__cube > .framer-box-carousel {
-    min-height: 480px;
-    height: 480px;
+    min-height: 350px;
+    height: 350px;
     transform: none;
   }
 }
 
 @media (max-width: 600px) {
   .vx-root.vx-embedded .vx-about__cube {
-    min-height: 340px;
-    height: 340px;
+    min-height: 295px;
+    height: 295px;
   }
   .vx-root.vx-embedded .vx-about__cube > .framer-box-carousel {
-    min-height: 340px;
-    height: 340px;
+    min-height: 295px;
+    height: 295px;
     transform: none;
   }
   .vx-root.vx-embedded .vx-about__copy {
     padding: 20px 18px;
   }
+  .vx-root.vx-embedded .vx-brand-name {
+    font-size: clamp(1rem, 4.4vw, 1.4rem);
+  }
 }
 
 @media (max-width: 430px) {
   .vx-root.vx-embedded .vx-about__cube {
-    min-height: 290px;
-    height: 290px;
+    min-height: 260px;
+    height: 260px;
   }
   .vx-root.vx-embedded .vx-about__cube > .framer-box-carousel {
-    min-height: 290px;
-    height: 290px;
+    min-height: 260px;
+    height: 260px;
     transform: none;
   }
 }
 
 @media (max-width: 360px) {
   .vx-root.vx-embedded .vx-about__cube {
-    min-height: 245px;
-    height: 245px;
+    min-height: 225px;
+    height: 225px;
   }
   .vx-root.vx-embedded .vx-about__cube > .framer-box-carousel {
-    min-height: 245px;
-    height: 245px;
+    min-height: 225px;
+    height: 225px;
     transform: none;
   }
 }
